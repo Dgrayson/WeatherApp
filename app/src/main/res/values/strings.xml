@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">WeatherApp</string>
+    <string name="city_name">City</string>
+    <string name="temp">Temp</string>
+    <string name="current_conditions">Current Conditions</string>
+
 </resources>
