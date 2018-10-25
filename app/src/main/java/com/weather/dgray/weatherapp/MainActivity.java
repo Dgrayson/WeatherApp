@@ -18,7 +18,7 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity {
 
     JsonObjectRequest jsonObjectRequest;
-    String baseUrl = "https://api.openweathermap.org/data/2.5/weather?q=Orlando,USA&appid=";
+    String baseUrl = "https://api.openweathermap.org/data/2.5/weather?q=";
     String jsonString = "";
 
     Intent intent;
@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String MESSAGE = "JSON";
 
+    String url;
     ApiKey key;
 
     @Override
@@ -39,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
         key = new ApiKey();
 
-        String url = baseUrl + key.GetKey();
-
         queue = Volley.newRequestQueue(this);
 
         cityName = findViewById(R.id.cityName);
@@ -48,24 +47,31 @@ public class MainActivity extends AppCompatActivity {
 
         intent = new Intent(this, CurrentWeather.class);
 
-        jsonObjectRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                jsonString = response.toString();
 
-                intent.putExtra(MESSAGE, jsonString);
-                startActivity(intent);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
 
         goButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                url = baseUrl + cityName.getText() + "&appid=" + key.GetKey();
+
+                jsonObjectRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        jsonString = response.toString();
+
+                        intent.putExtra(MESSAGE, jsonString);
+                        intent.putExtra("cityName", cityName.getText());
+
+                        startActivity(intent);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                });
+
                 queue.add(jsonObjectRequest);
             }
         });
